@@ -1,0 +1,16 @@
+package com.esteban.auth.services;
+
+import java.util.Set;
+
+import com.esteban.auth.dto.UsuarioRequest;
+import com.esteban.auth.dto.UsuarioResponse;
+
+public interface UsuarioService {
+	
+	Set<UsuarioResponse> listar();
+
+    UsuarioResponse registrar(UsuarioRequest request);
+
+    UsuarioResponse eliminar(String username);
+
+}

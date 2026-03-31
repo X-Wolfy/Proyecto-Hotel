@@ -1,0 +1,10 @@
+package com.esteban.auth.services;
+
+import com.esteban.auth.dto.LoginRequest;
+import com.esteban.auth.dto.TokenResponse;
+
+public interface AuthService {
+	
+	TokenResponse autenticar(LoginRequest request) throws Exception;
+
+}
