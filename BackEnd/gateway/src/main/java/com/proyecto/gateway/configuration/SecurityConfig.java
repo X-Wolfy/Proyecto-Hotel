@@ -1,6 +1,6 @@
 package com.proyecto.gateway.configuration;
 
-import java.util.List;
+/*import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import org.springframework.http.HttpMethod;
 //import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
-@Configuration
+@Configuration*/
 public class SecurityConfig {
 
 //	@Bean

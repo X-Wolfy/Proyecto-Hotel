@@ -1,23 +1,22 @@
 package com.proyecto.commons.controllers;
 
+import com.proyecto.commons.services.CrudService;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.proyecto.commons.services.CrudService;
 
 import java.util.List;
 
-@Validated
 @AllArgsConstructor
-public class CommonController <RQ, RS, S extends CrudService<RQ, RS>>{
-
+@Validated
+public class CommonController<RQ, RS, S extends CrudService<RQ, RS>> {
     protected final S service;
 
     @GetMapping
-    public ResponseEntity<List<RS>> listar(){
+    public ResponseEntity<List<RS>> listar() {
         return ResponseEntity.ok(service.listar());
     }
 
