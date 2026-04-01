@@ -1,0 +1,108 @@
+<div class="container-fluid">
+    <h2>Huéspedes</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-success" (click)="toggleForm()">
+            <i class="fa-solid fa-plus"></i>
+            Registrar Huésped
+        </button>
+    </div>
+    <table class="table table-striped table-bordered mt-3">
+        <thead class="table-dark">
+            <tr style="text-align: center;">
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Edad</th>
+                <th scope="col">Email</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Documento</th>
+                <th scope="col">Nacionalidad</th>
+                <th scope="col">Disponibilidad</th>
+                <th scope="col">Estado Registro</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align: center;" *ngFor="let huesped of listaHuespedes; let i = index">
+                <td>"{{ huesped.id }}"</td>
+                <td>{{ huesped.nombre }}</td>
+                <td>{{ huesped.edad }}</td>
+                <td>{{ huesped.email }}</td>
+                <td>{{ huesped.telefono }}</td>
+                <td>{{ huesped.documento }}</td>
+                <td>{{ huesped.nacionalidad }}</td>
+                <td>{{ huesped.estadoRegistro }}</td>
+                <td *ngIf="showActions">
+                    <button class="btn btn-primary btn-sm" (click)="editHuesped(huesped)">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="deleteHuesped(huesped.id)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr> 
+        </tbody>
+    </table>
+    <div class="modal fade" #huespedModalRef tabindex="-1" aria-labelledby="huespedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="huespedModalLabel"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="huespedForm" (ngSubmit)="onSubmit()">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Nombre</label>
+                                <input class="form-control" formControlName="nombre" autocomplete="false">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Apellido Paterno</label>
+                                <input class="form-control" formControlName="apellidoPaterno" autocomplete="false">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Apellido Materno</label>
+                                <input class="form-control" formControlName="apellidoMaterno" autocomplete="false">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <label class="form-label">Edad</label>
+                                <input type="number" class="form-control" formControlName="edad" min="18" max="100" autocomplete="false">
+                            </div>
+
+                             <div class="col-md-5 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" formControlName="email" autocomplete="false">
+                            </div>
+
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input class="form-control" formControlName="telefono" minlength="10" maxlength="10" autocomplete="false">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Documento</label>
+                                <input class="form-control" formControlName="documento" autocomplete="false">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nacionalid</label>
+                                <input class="form-control" formControlName="nacionalidad" autocomplete="false">
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-success" [disabled]="huespedForm.invalid">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
