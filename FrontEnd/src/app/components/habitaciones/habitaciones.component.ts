@@ -18,7 +18,7 @@ export class HabitacionesComponent implements OnInit, AfterViewInit {
 
   isEditMode: boolean = false;
   selectedHabitacion: HabitacionResponse | null = null;
-  showActions: boolean = false;
+  showActions: boolean = true;
   modalText: string = 'Registrar Habitación';
 
   @ViewChild('habitacionModalRef')
@@ -40,7 +40,7 @@ export class HabitacionesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-     this.listarHabitaciones();
+    this.listarHabitaciones();
     /* if(this.authService.hasRole(Roles.ADMIN)){
       this.showActions = true;
     } */

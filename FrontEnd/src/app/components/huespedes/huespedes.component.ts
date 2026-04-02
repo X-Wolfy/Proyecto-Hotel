@@ -12,13 +12,13 @@ declare var bootstrap: any;
   templateUrl: './huespedes.component.html',
   styleUrl: './huespedes.component.css'
 })
-export class HuespedesComponent implements OnInit, AfterViewInit{
+export class HuespedesComponent implements OnInit, AfterViewInit {
 
   listaHuespedes: HuespedResponse[] = [];
 
   isEditMode: boolean = false;
   selectedHuesped: HuespedResponse | null = null;
-  showActions: boolean = false;
+  showActions: boolean = true;
   modalText: string = 'Registrar huésped';
 
   @ViewChild('huespedModalRef')
@@ -30,7 +30,7 @@ export class HuespedesComponent implements OnInit, AfterViewInit{
 
   constructor(private fb: FormBuilder, private huespedService: HuespedesService,
     private authService: AuthService
-  ){
+  ) {
     this.huespedForm = this.fb.group({
       id: [null],
       nombre: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(2), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
@@ -53,13 +53,13 @@ export class HuespedesComponent implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit(): void {
-    this.modalInstance = new bootstrap.Modal(this.huespedModalEl.nativeElement, {keyboard: false});
+    this.modalInstance = new bootstrap.Modal(this.huespedModalEl.nativeElement, { keyboard: false });
     this.huespedModalEl.nativeElement.addEventListener('hidden.bs.modal', () => {
       this.resetForm();
     })
   }
 
-  listarHuespedes(): void{
+  listarHuespedes(): void {
     this.huespedService.getHuespedes().subscribe({
       next: resp => {
         this.listaHuespedes = resp;
@@ -67,37 +67,48 @@ export class HuespedesComponent implements OnInit, AfterViewInit{
     })
   }
 
-  resetForm(): void{
+  resetForm(): void {
     this.isEditMode = false;
     this.selectedHuesped = null;
     this.huespedForm.reset();
   }
 
-  toggleForm(): void{
+  toggleForm(): void {
     this.resetForm();
     this.modalText = 'Registrar huésped';
     this.modalInstance.show();
   }
 
-  editHuesped(huesped: HuespedResponse): void{
+  editHuesped(huesped: HuespedResponse): void {
     this.isEditMode = true;
     this.selectedHuesped = huesped;
     this.modalText = 'Editando huésped: ' + huesped.nombre;
 
-    this.huespedForm.patchValue({...huesped});
+    const nombreConcat = huesped.nombre.split(' ');
+
+    const nombre = nombreConcat[0] || '';
+    const apellidoPaterno = nombreConcat[1] || '';
+    const apellidoMaterno = nombreConcat.slice(2).join(' ');
+
+    this.huespedForm.patchValue({
+      ...huesped,
+      nombre: nombre,
+      apellidoPaterno: apellidoPaterno,
+      apellidoMaterno: apellidoMaterno
+    });
     this.modalInstance.show();
   }
 
-   onSubmit(): void{
-    if(this.huespedForm.invalid) return;
+  onSubmit(): void {
+    if (this.huespedForm.invalid) return;
 
     const huespedData: HuespedRequest = this.huespedForm.value;
 
-    if(this.isEditMode && this.selectedHuesped){
+    if (this.isEditMode && this.selectedHuesped) {
       this.huespedService.putHuesped(huespedData, this.selectedHuesped.id).subscribe({
         next: registro => {
           const index: number = this.listaHuespedes.findIndex(p => p.id === this.selectedHuesped!.id);
-          if(index !== -1) this.listaHuespedes[index] = registro;
+          if (index !== -1) this.listaHuespedes[index] = registro;
           Swal.fire('Actualizado', 'Huésped actualizado correctamente', 'success');
           this.modalInstance.hide();
         }
@@ -113,22 +124,36 @@ export class HuespedesComponent implements OnInit, AfterViewInit{
     }
   }
 
-  deleteHuesped(idHuesped: number): void{
+  deleteHuesped(idHuesped: number): void {
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'El huésped será eliminado permanente',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar' 
+      cancelButtonText: 'Cancelar'
     }).then(result => {
-      if(result.isConfirmed){
+      if (result.isConfirmed) {
         this.huespedService.deleteHuesped(idHuesped).subscribe({
           next: () => {
             this.listaHuespedes = this.listaHuespedes.filter(p => p.id !== idHuesped);
             Swal.fire('Eliminado', 'Huésped eliminado correctamente', 'success');
           },
-            error: (error) => {
-              console.error('Error al eliminar huésped:', error);          
+          error: (error) => {
+            console.error('Error al eliminar huésped:', error);
+
+            let mensajeError = 'No se pudo eliminar el huésped';
+
+            if (error.status === 404) {
+              mensajeError = 'No se puede eliminar un huésped con reserva activa';
+            } else if (error.status === 500) {
+              mensajeError = 'Error interno del servidor (500).';
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: mensajeError
+            });
           }
         });
       }
