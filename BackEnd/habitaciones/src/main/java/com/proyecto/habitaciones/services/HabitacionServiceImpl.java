@@ -48,8 +48,6 @@ public class HabitacionServiceImpl implements HabitacionService{
 		
 		Habitacion habitacion = habitacionMapper.requestToEntity(request);
 		
-		habitacion.setEstadoHabitacion(EstadoHabitacion.DISPONIBLE);
-		
 		habitacionRepository.save(habitacion);
 		
 		return habitacionMapper.entityToResponse(habitacion);
@@ -63,6 +61,8 @@ public class HabitacionServiceImpl implements HabitacionService{
 		
 		habitacionMapper.updateEntityFromRequest(request, habitacion);
 		
+		habitacion = habitacionRepository.save(habitacion);
+		
 		return habitacionMapper.entityToResponse(habitacion);
 	}
 
@@ -75,7 +75,7 @@ public class HabitacionServiceImpl implements HabitacionService{
 	    }
 		
 		habitacion.setEstadoRegistro(EstadoRegistro.ELIMINADO);
-		
+		habitacionRepository.save(habitacion);
 	}
 
 	@Override
@@ -98,12 +98,12 @@ public class HabitacionServiceImpl implements HabitacionService{
 	@Override
 	public HabitacionResponse cambiarEstadoHabitacionManual(Long idHabitacion, Long idEstadoHabitacion) {
 		Habitacion habitacion = obtenerHabitacionOException(idHabitacion);
+		EstadoHabitacion estadoHabitacion = EstadoHabitacion.fromCodigo(idEstadoHabitacion);
         
-		if (idEstadoHabitacion == 2L) { 
-            if (reservaClient.habitacionTieneReservas(idHabitacion)) {
-                throw new EntidadRelacionadaException("No es posible cambiar la disponibilidad: la habitacion esta OCUPADA.");
-            }
-        }
+		if ((estadoHabitacion == EstadoHabitacion.MANTENIMIENTO || estadoHabitacion == EstadoHabitacion.LIMPIEZA) 
+				&& reservaClient.habitacionTieneReservas(idHabitacion)) {
+			throw new EntidadRelacionadaException("No es posible cambiar el estado manualmente: la habitación tiene reservas activas.");
+		}
 		
         habitacion.setEstadoHabitacion(EstadoHabitacion.fromCodigo(idEstadoHabitacion));
         return habitacionMapper.entityToResponse(habitacionRepository.save(habitacion));

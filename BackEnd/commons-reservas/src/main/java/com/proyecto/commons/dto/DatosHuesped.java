@@ -3,7 +3,7 @@ package com.proyecto.commons.dto;
 public record DatosHuesped(
 		Long id,
 		String nombre,
-		String edad,
+		Short edad,
 		String nacionalidad,
 		String email,
 		String telefono,
