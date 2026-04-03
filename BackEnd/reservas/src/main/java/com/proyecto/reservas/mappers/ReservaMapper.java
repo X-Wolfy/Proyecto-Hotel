@@ -40,7 +40,7 @@ public class ReservaMapper implements CommonMapper<ReservaRequest, ReservaRespon
 				null, 
 				entity.getFechaEntrada(), 
 				entity.getFechaSalida(), 
-				entity.getEstadoReserva());
+				entity.getEstadoReserva().getDescripcion());
 	}
 	
 	public ReservaResponse entityToResponse(Reserva entity, HuespedResponse huesped) {
@@ -52,7 +52,7 @@ public class ReservaMapper implements CommonMapper<ReservaRequest, ReservaRespon
 				null, 
 				entity.getFechaEntrada(), 
 				entity.getFechaSalida(), 
-				entity.getEstadoReserva());
+				entity.getEstadoReserva().getDescripcion());
 	}
 	
 	public ReservaResponse entityToResponse(Reserva entity, HuespedResponse huesped, HabitacionResponse habitacion) {
@@ -64,7 +64,7 @@ public class ReservaMapper implements CommonMapper<ReservaRequest, ReservaRespon
 				habitacionResponseToDatosHabitacion(habitacion), 
 				entity.getFechaEntrada(), 
 				entity.getFechaSalida(), 
-				entity.getEstadoReserva());
+				entity.getEstadoReserva().getDescripcion());
 	}
 
 	@Override

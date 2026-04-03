@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyecto.commons.dto.DatosHabitacion;
 import com.proyecto.commons.dto.DatosHuesped;
-import com.proyecto.reservas.enums.EstadoReserva;
 
 public record ReservaResponse(
 		
@@ -16,6 +15,6 @@ public record ReservaResponse(
 		LocalDateTime fechaEntrada,
 		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
 		LocalDateTime fechaSalida,
-		EstadoReserva estadoReserva
+		String estadoReserva
 
 ) {}
