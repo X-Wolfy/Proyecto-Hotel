@@ -26,6 +26,9 @@ public record HabitacionRequest(
 
         @NotNull(message = "El precio es requerido")
         @Positive(message = "El precio tiene que ser positivo")
-        BigDecimal precio
+        BigDecimal precio,
+        
+        @Positive(message = "El id del estado de la habitacion debe ser positivo")
+		Long idEstadoHabitacion
 		
 ) {}
