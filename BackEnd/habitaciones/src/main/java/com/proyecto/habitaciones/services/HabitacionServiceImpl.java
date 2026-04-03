@@ -61,6 +61,12 @@ public class HabitacionServiceImpl implements HabitacionService{
 		
 		validarCambiosUnicos(request, id);
 		
+		if (request.idEstadoHabitacion() != null && request.idEstadoHabitacion() == 1L) {
+	        if (reservaClient.habitacionTieneReservas(id)) {
+	            throw new EntidadRelacionadaException("No es posible actualizar la habitación a DISPONIBLE: la habitación tiene reservas activas.");
+	        }
+	    }
+		
 		habitacionMapper.updateEntityFromRequest(request, habitacion);
 		
 		return habitacionMapper.entityToResponse(habitacion);
